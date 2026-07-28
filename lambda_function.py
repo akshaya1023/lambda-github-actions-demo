@@ -1,3 +1,4 @@
+# import libraries
 import json
 import os
 import re
@@ -16,6 +17,7 @@ def lambda_handler(event, context):
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+# Authenticating with Vault API using environment variables 
 VAULT_URL         = os.environ.get("VAULT_URL",         "https://partnersi-cognizant-rim.veevavault.com")
 VAULT_USERNAME    = os.environ.get("VAULT_USERNAME",    "gileadrim@partnersi-cognizant.com")
 VAULT_PASSWORD    = os.environ.get("VAULT_PASSWORD",    "Gilead!101")
