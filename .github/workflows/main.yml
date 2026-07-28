@@ -11,11 +11,45 @@ permissions:
 
 jobs:
   deploy:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black ruff pytest pytest-cov
+          pip install -r requirements.txt
+
+
+      - name: Run Black Formatting Check
+        run: |
+          black --check .
+
+
+      - name: Run Ruff Lint Check
+        run: |
+          ruff check .
+
+
+      - name: Run Unit Tests with Coverage
+        run: |
+          pytest \
+            --cov=lambda_function \
+            --cov-report=term-missing \
+            --cov-fail-under=75
+
 
       - name: Debug GitHub Context
         run: |
@@ -23,15 +57,18 @@ jobs:
           echo "Ref: $GITHUB_REF"
           echo "Actor: $GITHUB_ACTOR"
 
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
+
       - name: Create Deployment Package
         run: |
           zip -r function.zip lambda_function.py
+
 
       - name: Deploy Lambda
         run: |
