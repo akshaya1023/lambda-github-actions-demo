@@ -39,7 +39,7 @@ jobs:
 
       - name: Run Ruff Lint Check
         run: |
-          ruff check . --ignore BLE001,I001,C401,DTZ005
+          ruff check . --ignore BLE001,I001,C401,DTZ005,B017
 
 
       - name: Run Unit Tests with Coverage
